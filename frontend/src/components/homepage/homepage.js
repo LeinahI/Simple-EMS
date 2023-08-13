@@ -1,12 +1,12 @@
 import React from "react";
 import styled from "styled-components";
 
-function Homepage() {
+function Homepage({ setLoginUser }) {
     return (
         <HomepageStyled>
             <div className="hp">
                 <h1>Hello Homepage</h1>
-                <div className="btn">
+                <div className="btn" onClick={() => setLoginUser({})}>
                     Log out
                 </div>
             </div>

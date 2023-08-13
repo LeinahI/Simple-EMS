@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import axios from 'axios';
-function Login() {
+import { useNavigate } from "react-router-dom";
 
-    const [user, setUser] = useState({
-        email: "",
-        password: "",
-    })
+function Login({ setLoginUser }) {
+
+    const navigate = useNavigate()
+
+    const [user, setUser] = useState({})
 
     const handleChange = e => {
         const { name, value } = e.target
@@ -19,22 +20,27 @@ function Login() {
         axios
             .post("http://localhost:8000/login", user)
             .then((res) => {
-                alert(res.data.message); // This will display the response data from the server
+                alert(res.data.message) // This will display the response data from the server
+                setLoginUser(res.data.user)
+                navigate("/")
             })
             .catch((error) => {
-                alert(error.response.data.message); // This will display the error message sent by the server
+                if (error.response && error.response.data) {
+                    alert(error.response.data.message); // Display the error message sent by the server
+                } else {
+                    alert("An error occurred while logging in.");
+                }
             });
     };
 
     return (
         <LoginStyled>
             <div className="login">
-                {console.log("User", user)}
                 <h1>Log in</h1>
                 <input type="email" name="email" value={user.email} placeholder="Enter your email address" onChange={handleChange} />
                 <input type="password" name="password" value={user.password} placeholder="Enter your password" onChange={handleChange} />
                 <button type="button" className="loginBtn" name="loginBtn" onClick={login}>Log in</button>
-                <p>Don't have account yet? <a href="https://fb.com" target={'_blank'} rel="noreferrer">Register</a> </p>
+                <p>Don't have account yet? <span onClick={() => navigate('/register')}>Register</span> </p>
             </div>
         </LoginStyled>
     )
@@ -51,7 +57,11 @@ const LoginStyled = styled.form`
     align-items: center;
     text-align: center;
 }
-
+span{
+    cursor: pointer;
+    text-decoration: underline;
+    font-weight: bold;
+}
 .login > input{
     border-radius: 8px;
     border: 2px solid #dddfe2;

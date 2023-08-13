@@ -56,7 +56,7 @@ const User = mongoose.model('user', userSchema);
 //Routes
 app.get("/", (req, res) => {
     /* res.send("My API register") */
-    res.send('ok')
+    /* res.send('ok') */
 })
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regular expression for email validation
@@ -95,7 +95,7 @@ app.post("/register", async (req, res) => {
 
         if (existingUser) {
             // User with the same email already exists
-            return res.status(409).json({ message: "Email already registered." });
+            return res.status(400).json({ message: "Email already registered." });
         }
 
         // Create a new user
@@ -109,7 +109,7 @@ app.post("/register", async (req, res) => {
         await newUser.save();
 
         // User successfully registered
-        res.status(200).json({ message: "Successfully registered." });
+        res.status(200).json({ message: "Successfully registered! You can log in now." });
     } catch (error) {
         // Error occurred while querying the database or saving the user
         res.status(500).json({ message: "An error occurred while registering the user.", error });
